@@ -98,24 +98,29 @@
       color: var(--text-dark);
     }
 
-    /* ── Hero ── */
+    /* ── Hero (with background image & overlay) ── */
     .hero {
-      padding: 160px 0 100px;
-      background: linear-gradient(135deg, var(--bg-warm) 0%, #f3ece4 100%);
+      padding: 200px 0 140px;
+      background: url('https://images.unsplash.com/photo-1515562141589-67f0d569b6fc?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
       text-align: center;
       position: relative;
       overflow: hidden;
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
     }
 
     .hero::before {
       content: '';
       position: absolute;
-      top: -50%;
-      left: -20%;
-      width: 60%;
-      height: 200%;
-      background: radial-gradient(ellipse, rgba(176,141,87,0.06) 0%, transparent 70%);
+      inset: 0;
+      background: rgba(20, 18, 15, 0.55);
       pointer-events: none;
+    }
+
+    .hero .container {
+      position: relative;
+      z-index: 1;
     }
 
     .hero-subtitle {
@@ -133,7 +138,7 @@
       font-size: clamp(40px, 6vw, 72px);
       font-weight: 300;
       line-height: 1.15;
-      color: var(--text-dark);
+      color: var(--text-light);
       margin-bottom: 24px;
       max-width: 800px;
       margin-left: auto;
@@ -150,7 +155,7 @@
       font-size: 16px;
       font-weight: 300;
       line-height: 1.8;
-      color: var(--text-body);
+      color: rgba(245, 240, 235, 0.85);
       max-width: 560px;
       margin: 0 auto 40px;
     }
@@ -160,6 +165,164 @@
       gap: 16px;
       justify-content: center;
       flex-wrap: wrap;
+    }
+
+    .hero .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .hero .btn-primary:hover {
+      background: var(--accent-dark);
+      border-color: var(--accent-dark);
+    }
+
+    .hero .btn-secondary {
+      color: var(--text-light);
+      border-color: rgba(245, 240, 235, 0.5);
+    }
+
+    .hero .btn-secondary:hover {
+      background: rgba(245, 240, 235, 0.12);
+      color: #fff;
+      border-color: var(--text-light);
+    }
+
+    /* ── Gallery Grid ── */
+    .gallery {
+      padding: 80px 0;
+      background: var(--bg-white);
+    }
+
+    .gallery-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 1;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.06);
+    }
+
+    .gallery-item--tall {
+      grid-row: span 2;
+      aspect-ratio: auto;
+    }
+
+    /* ── Bespoke Creation ── */
+    .bespoke {
+      background: var(--bg-warm);
+    }
+
+    .bespoke-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .bespoke-image {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bespoke-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      aspect-ratio: 4/5;
+    }
+
+    .bespoke-features {
+      list-style: none;
+      margin: 28px 0 36px;
+    }
+
+    .bespoke-features li {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text-body);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bespoke-features li::before {
+      content: '\2666';
+      color: var(--accent);
+      font-size: 10px;
+    }
+
+    /* ── Family Heirloom ── */
+    .heirloom {
+      background: var(--bg-white);
+    }
+
+    .heirloom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .heirloom-image {
+      position: relative;
+      overflow: hidden;
+      order: 2;
+    }
+
+    .heirloom-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      aspect-ratio: 4/5;
+    }
+
+    .heirloom-content {
+      order: 1;
+    }
+
+    .heirloom-features {
+      list-style: none;
+      margin: 28px 0 36px;
+    }
+
+    .heirloom-features li {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text-body);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .heirloom-features li::before {
+      content: '\2666';
+      color: var(--accent);
+      font-size: 10px;
     }
 
     .btn-primary {
@@ -682,11 +845,21 @@
     /* ── Responsive ── */
     @media (max-width: 1024px) {
       .process-steps { grid-template-columns: repeat(2, 1fr); }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-item--tall { grid-row: span 1; aspect-ratio: 1; }
     }
 
     @media (max-width: 768px) {
       .about-grid,
       .lead-grid { grid-template-columns: 1fr; gap: 48px; }
+
+      .bespoke-grid,
+      .heirloom-grid { grid-template-columns: 1fr; gap: 40px; }
+
+      .heirloom-image { order: -1; }
+
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .gallery { padding: 48px 0; }
 
       .services-grid,
       .testimonials-grid { grid-template-columns: 1fr; }
@@ -699,7 +872,7 @@
 
       .form-row { grid-template-columns: 1fr; }
 
-      .hero { padding: 140px 0 80px; }
+      .hero { padding: 160px 0 100px; min-height: 80vh; }
 
       .section { padding: 72px 0; }
 
@@ -721,11 +894,41 @@
   <section class="hero">
     <div class="container">
       <p class="hero-subtitle">Custom Design Jewellery &mdash; Dubai</p>
-      <h1>Create a Design That <em>Represents You</em></h1>
+      <h1>Turn Your Dream Jewel <em>into Reality</em></h1>
       <p class="hero-text">Since 1999, Isadora Jewellery has been crafting bespoke pieces that tell your unique story. 100% custom designed with GIA certified diamonds, 18K gold, and precious stones.</p>
       <div class="hero-buttons">
-        <a href="#consultation" class="btn-primary">Book Free Consultation</a>
-        <a href="#process" class="btn-secondary">How It Works</a>
+        <a href="#consultation" class="btn-primary">Create Your Jewel</a>
+        <a href="#heirloom" class="btn-secondary">Revive a Family Heirloom</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Grid -->
+  <section class="gallery">
+    <div class="container">
+      <div class="gallery-header">
+        <p class="section-label">Our Creations</p>
+        <h2 class="section-heading">Handcrafted Masterpieces</h2>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item gallery-item--tall">
+          <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=600&q=80" alt="Custom gold necklace with diamonds" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80" alt="Emerald and gold brooch" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=600&q=80" alt="Diamond engagement ring" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=600&q=80" alt="Gold bracelets collection" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=600&q=80" alt="Diamond pendant necklace" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=600&q=80" alt="Custom earrings with precious stones" loading="lazy">
+        </div>
       </div>
     </div>
   </section>
@@ -778,6 +981,50 @@
             <li>Prices lower than market with uncompromised quality</li>
           </ul>
           <a href="#consultation" class="btn-primary">Start Your Journey</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bespoke Creation -->
+  <section class="section bespoke">
+    <div class="container">
+      <div class="bespoke-grid">
+        <div class="bespoke-image">
+          <img src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=800&q=80" alt="Jeweller crafting a bespoke ring in the atelier" loading="lazy">
+        </div>
+        <div class="bespoke-content">
+          <p class="section-label">Bespoke Creation</p>
+          <h2 class="section-heading">A Jewel Designed Entirely for You</h2>
+          <p class="section-text">From the very first sketch to the final polish, our master artisans work hand-in-hand with you to bring your vision to life. Every stone is selected, every curve considered, and every detail refined to perfection.</p>
+          <ul class="bespoke-features">
+            <li>One-on-one design consultations with our master jeweller</li>
+            <li>Precision CAD rendering before any metalwork begins</li>
+            <li>Hand-selected GIA certified diamonds &amp; precious stones</li>
+          </ul>
+          <a href="#consultation" class="btn-primary">Create Your Jewel</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Family Heirloom -->
+  <section class="section heirloom" id="heirloom">
+    <div class="container">
+      <div class="heirloom-grid">
+        <div class="heirloom-content">
+          <p class="section-label">Heirloom Reimagined</p>
+          <h2 class="section-heading">Breathe New Life into Your Family Jewels</h2>
+          <p class="section-text">Inherited pieces carry irreplaceable sentimental value. We specialise in transforming vintage and family jewellery into stunning modern designs &mdash; preserving every memory while giving it a new story.</p>
+          <ul class="heirloom-features">
+            <li>Careful assessment &amp; restoration of inherited pieces</li>
+            <li>Modern redesign while preserving original stones</li>
+            <li>Full documentation of the transformation journey</li>
+          </ul>
+          <a href="#consultation" class="btn-primary">Revive Your Heirloom</a>
+        </div>
+        <div class="heirloom-image">
+          <img src="https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&w=800&q=80" alt="Vintage jewellery being restored and redesigned" loading="lazy">
         </div>
       </div>
     </div>
