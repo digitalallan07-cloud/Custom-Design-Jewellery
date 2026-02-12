@@ -34,6 +34,7 @@
       background: var(--bg-warm);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
     img { max-width: 100%; display: block; }
@@ -45,6 +46,58 @@
       padding: 0 24px;
     }
 
+    /* ── Scroll Reveal Animations ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal-left.revealed {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(60px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal-right.revealed {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal-scale.revealed {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .stagger-1 { transition-delay: 0.1s; }
+    .stagger-2 { transition-delay: 0.2s; }
+    .stagger-3 { transition-delay: 0.3s; }
+    .stagger-4 { transition-delay: 0.4s; }
+    .stagger-5 { transition-delay: 0.5s; }
+    .stagger-6 { transition-delay: 0.6s; }
+
     /* ── Header ── */
     header {
       position: fixed;
@@ -52,13 +105,17 @@
       left: 0;
       right: 0;
       z-index: 100;
-      background: rgba(251, 248, 246, 0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border-light);
-      transition: box-shadow 0.3s ease;
+      background: transparent;
+      border-bottom: 1px solid transparent;
+      transition: background 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
     }
 
-    header.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.06); }
+    header.scrolled {
+      background: rgba(251, 248, 246, 0.97);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+      border-bottom-color: var(--border-light);
+    }
 
     .header-inner {
       max-width: 1200px;
@@ -74,8 +131,11 @@
       font-size: 28px;
       font-weight: 600;
       letter-spacing: 2px;
-      color: var(--text-dark);
+      color: var(--text-light);
+      transition: color 0.4s ease;
     }
+
+    header.scrolled .logo { color: var(--text-dark); }
 
     .logo span { color: var(--accent); }
 
@@ -86,41 +146,66 @@
       letter-spacing: 1.5px;
       text-transform: uppercase;
       padding: 10px 28px;
+      background: transparent;
+      color: var(--text-light);
+      border: 2px solid rgba(245, 240, 235, 0.5);
+      cursor: pointer;
+      transition: all 0.4s ease;
+    }
+
+    header.scrolled .header-cta {
       background: var(--text-dark);
       color: var(--bg-white);
-      border: 2px solid var(--text-dark);
-      cursor: pointer;
-      transition: all 0.3s ease;
+      border-color: var(--text-dark);
     }
 
     .header-cta:hover {
-      background: transparent;
-      color: var(--text-dark);
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
     }
 
-    /* ── Hero (with background image & overlay) ── */
+    /* ── Hero (Parallax Cover) ── */
     .hero {
-      padding: 200px 0 140px;
-      background: url('https://images.unsplash.com/photo-1515562141589-67f0d569b6fc?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
-      text-align: center;
       position: relative;
-      overflow: hidden;
-      min-height: 90vh;
+      min-height: 100vh;
       display: flex;
       align-items: center;
+      text-align: center;
+      overflow: hidden;
     }
 
-    .hero::before {
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .hero-bg img {
+      width: 100%;
+      height: 120%;
+      object-fit: cover;
+      object-position: center 30%;
+      will-change: transform;
+    }
+
+    .hero::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: rgba(20, 18, 15, 0.55);
+      background: linear-gradient(
+        to bottom,
+        rgba(15, 12, 8, 0.45) 0%,
+        rgba(15, 12, 8, 0.55) 50%,
+        rgba(15, 12, 8, 0.7) 100%
+      );
+      z-index: 1;
       pointer-events: none;
     }
 
     .hero .container {
       position: relative;
-      z-index: 1;
+      z-index: 2;
     }
 
     .hero-subtitle {
@@ -135,9 +220,9 @@
 
     .hero h1 {
       font-family: var(--font-heading);
-      font-size: clamp(40px, 6vw, 72px);
+      font-size: clamp(40px, 6vw, 76px);
       font-weight: 300;
-      line-height: 1.15;
+      line-height: 1.12;
       color: var(--text-light);
       margin-bottom: 24px;
       max-width: 800px;
@@ -189,142 +274,35 @@
       border-color: var(--text-light);
     }
 
-    /* ── Gallery Grid ── */
-    .gallery {
-      padding: 80px 0;
-      background: var(--bg-white);
-    }
-
-    .gallery-header {
-      text-align: center;
-      margin-bottom: 48px;
-    }
-
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
-    .gallery-item {
-      position: relative;
-      overflow: hidden;
-      aspect-ratio: 1;
-    }
-
-    .gallery-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s ease;
-    }
-
-    .gallery-item:hover img {
-      transform: scale(1.06);
-    }
-
-    .gallery-item--tall {
-      grid-row: span 2;
-      aspect-ratio: auto;
-    }
-
-    /* ── Bespoke Creation ── */
-    .bespoke {
-      background: var(--bg-warm);
-    }
-
-    .bespoke-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-    }
-
-    .bespoke-image {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .bespoke-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      aspect-ratio: 4/5;
-    }
-
-    .bespoke-features {
-      list-style: none;
-      margin: 28px 0 36px;
-    }
-
-    .bespoke-features li {
-      font-family: var(--font-body);
-      font-size: 14px;
-      color: var(--text-body);
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border-light);
+    .hero-scroll {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
+      color: rgba(245, 240, 235, 0.5);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: scrollBounce 2s ease-in-out infinite;
     }
 
-    .bespoke-features li::before {
-      content: '\2666';
-      color: var(--accent);
-      font-size: 10px;
+    .hero-scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
     }
 
-    /* ── Family Heirloom ── */
-    .heirloom {
-      background: var(--bg-white);
+    @keyframes scrollBounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
     }
 
-    .heirloom-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-    }
-
-    .heirloom-image {
-      position: relative;
-      overflow: hidden;
-      order: 2;
-    }
-
-    .heirloom-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      aspect-ratio: 4/5;
-    }
-
-    .heirloom-content {
-      order: 1;
-    }
-
-    .heirloom-features {
-      list-style: none;
-      margin: 28px 0 36px;
-    }
-
-    .heirloom-features li {
-      font-family: var(--font-body);
-      font-size: 14px;
-      color: var(--text-body);
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border-light);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .heirloom-features li::before {
-      content: '\2666';
-      color: var(--accent);
-      font-size: 10px;
-    }
-
+    /* ── Buttons ── */
     .btn-primary {
       font-family: var(--font-body);
       font-size: 13px;
@@ -403,6 +381,124 @@
       letter-spacing: 0.5px;
     }
 
+    /* ── Image Slider / Carousel ── */
+    .slider-section {
+      padding: 80px 0;
+      background: var(--bg-white);
+      overflow: hidden;
+    }
+
+    .slider-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .slider-wrapper {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .slider-track {
+      display: flex;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      gap: 16px;
+      cursor: grab;
+    }
+
+    .slider-track:active { cursor: grabbing; }
+
+    .slider-track.dragging { transition: none; }
+
+    .slider-slide {
+      flex: 0 0 calc(33.333% - 11px);
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .slider-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .slider-slide:hover img {
+      transform: scale(1.06);
+    }
+
+    .slider-slide-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      display: flex;
+      align-items: flex-end;
+      padding: 24px;
+    }
+
+    .slider-slide:hover .slider-slide-overlay {
+      opacity: 1;
+    }
+
+    .slider-slide-overlay span {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .slider-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      margin-top: 32px;
+    }
+
+    .slider-btn {
+      width: 48px;
+      height: 48px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-white);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      font-size: 18px;
+      color: var(--text-dark);
+    }
+
+    .slider-btn:hover {
+      background: var(--text-dark);
+      color: var(--bg-white);
+      border-color: var(--text-dark);
+    }
+
+    .slider-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .slider-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border-light);
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .slider-dot.active {
+      background: var(--accent);
+      transform: scale(1.2);
+    }
+
     /* ── Section Styles ── */
     .section {
       padding: 100px 0;
@@ -434,6 +530,60 @@
       line-height: 1.8;
       color: var(--text-body);
       max-width: 520px;
+    }
+
+    /* ── Parallax Divider ── */
+    .parallax-divider {
+      position: relative;
+      height: 50vh;
+      min-height: 300px;
+      overflow: hidden;
+    }
+
+    .parallax-divider-bg {
+      position: absolute;
+      inset: -20% 0;
+      z-index: 0;
+    }
+
+    .parallax-divider-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      will-change: transform;
+    }
+
+    .parallax-divider::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 12, 8, 0.5);
+      z-index: 1;
+    }
+
+    .parallax-divider-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 24px;
+    }
+
+    .parallax-divider-content h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 300;
+      color: var(--text-light);
+      max-width: 700px;
+      line-height: 1.25;
+    }
+
+    .parallax-divider-content h2 em {
+      font-style: italic;
+      color: var(--accent);
     }
 
     /* ── About / Story ── */
@@ -490,6 +640,113 @@
       font-size: 10px;
     }
 
+    /* ── Bespoke Creation ── */
+    .bespoke {
+      background: var(--bg-warm);
+    }
+
+    .bespoke-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .bespoke-image {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bespoke-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      aspect-ratio: 4/5;
+      transition: transform 0.6s ease;
+    }
+
+    .bespoke-image:hover img {
+      transform: scale(1.03);
+    }
+
+    .bespoke-features {
+      list-style: none;
+      margin: 28px 0 36px;
+    }
+
+    .bespoke-features li {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text-body);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bespoke-features li::before {
+      content: '\2666';
+      color: var(--accent);
+      font-size: 10px;
+    }
+
+    /* ── Family Heirloom ── */
+    .heirloom {
+      background: var(--bg-white);
+    }
+
+    .heirloom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .heirloom-image {
+      position: relative;
+      overflow: hidden;
+      order: 2;
+    }
+
+    .heirloom-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      aspect-ratio: 4/5;
+      transition: transform 0.6s ease;
+    }
+
+    .heirloom-image:hover img {
+      transform: scale(1.03);
+    }
+
+    .heirloom-content {
+      order: 1;
+    }
+
+    .heirloom-features {
+      list-style: none;
+      margin: 28px 0 36px;
+    }
+
+    .heirloom-features li {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text-body);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .heirloom-features li::before {
+      content: '\2666';
+      color: var(--accent);
+      font-size: 10px;
+    }
+
     /* ── Process / How It Works ── */
     .process { background: var(--bg-warm); }
 
@@ -513,7 +770,10 @@
       text-align: center;
       padding: 40px 24px;
       position: relative;
+      transition: transform 0.3s ease;
     }
+
+    .step:hover { transform: translateY(-4px); }
 
     .step-number {
       font-family: var(--font-heading);
@@ -592,7 +852,7 @@
       color: var(--text-body);
     }
 
-    /* ── Testimonials ── */
+    /* ── Testimonials Slider ── */
     .testimonials { background: var(--bg-dark); color: var(--text-light); }
 
     .testimonials .section-label { color: var(--accent); }
@@ -603,33 +863,39 @@
       margin-bottom: 64px;
     }
 
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 32px;
+    .testimonials-track-wrapper {
+      overflow: hidden;
+    }
+
+    .testimonials-track {
+      display: flex;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
     .testimonial-card {
-      padding: 40px;
-      border: 1px solid rgba(255,255,255,0.1);
-      position: relative;
+      flex: 0 0 100%;
+      padding: 48px 60px;
+      text-align: center;
     }
 
     .testimonial-stars {
       color: var(--accent);
-      font-size: 14px;
-      letter-spacing: 4px;
-      margin-bottom: 20px;
+      font-size: 16px;
+      letter-spacing: 6px;
+      margin-bottom: 24px;
     }
 
-    .testimonial-card p {
+    .testimonial-card blockquote {
       font-family: var(--font-heading);
-      font-size: 18px;
+      font-size: clamp(20px, 2.5vw, 28px);
       font-weight: 400;
       font-style: italic;
-      line-height: 1.7;
-      color: rgba(245,240,235,0.85);
-      margin-bottom: 24px;
+      line-height: 1.6;
+      color: rgba(245,240,235,0.9);
+      margin-bottom: 28px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .testimonial-author {
@@ -638,6 +904,53 @@
       font-weight: 500;
       letter-spacing: 1px;
       color: var(--accent);
+    }
+
+    .testimonials-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .testimonials-btn {
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      font-size: 16px;
+      color: var(--text-light);
+    }
+
+    .testimonials-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .testimonials-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .testimonials-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .testimonials-dot.active {
+      background: var(--accent);
+      transform: scale(1.3);
     }
 
     /* ── Lead Form ── */
@@ -845,8 +1158,7 @@
     /* ── Responsive ── */
     @media (max-width: 1024px) {
       .process-steps { grid-template-columns: repeat(2, 1fr); }
-      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
-      .gallery-item--tall { grid-row: span 1; aspect-ratio: 1; }
+      .slider-slide { flex: 0 0 calc(50% - 8px); }
     }
 
     @media (max-width: 768px) {
@@ -858,8 +1170,7 @@
 
       .heirloom-image { order: -1; }
 
-      .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-      .gallery { padding: 48px 0; }
+      .slider-slide { flex: 0 0 100%; }
 
       .services-grid,
       .testimonials-grid { grid-template-columns: 1fr; }
@@ -872,11 +1183,17 @@
 
       .form-row { grid-template-columns: 1fr; }
 
-      .hero { padding: 160px 0 100px; min-height: 80vh; }
+      .hero { min-height: 90vh; }
 
       .section { padding: 72px 0; }
 
       .header-cta { padding: 8px 16px; font-size: 11px; }
+
+      .testimonial-card { padding: 32px 24px; }
+
+      .parallax-divider { height: 40vh; min-height: 240px; }
+
+      .hero-scroll { display: none; }
     }
   </style>
 </head>
@@ -890,46 +1207,23 @@
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="hero">
+  <!-- Hero Section (Parallax Cover) -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <img src="https://images.unsplash.com/photo-1515562141589-67f0d569b6fc?auto=format&fit=crop&w=1920&q=80" alt="Luxury gold jewellery" id="heroBg">
+    </div>
     <div class="container">
-      <p class="hero-subtitle">Custom Design Jewellery &mdash; Dubai</p>
-      <h1>Turn Your Dream Jewel <em>into Reality</em></h1>
-      <p class="hero-text">Since 1999, Isadora Jewellery has been crafting bespoke pieces that tell your unique story. 100% custom designed with GIA certified diamonds, 18K gold, and precious stones.</p>
-      <div class="hero-buttons">
+      <p class="hero-subtitle reveal">Custom Design Jewellery &mdash; Dubai</p>
+      <h1 class="reveal stagger-1">Turn Your Dream Jewel <em>into Reality</em></h1>
+      <p class="hero-text reveal stagger-2">Since 1999, Isadora Jewellery has been crafting bespoke pieces that tell your unique story. 100% custom designed with GIA certified diamonds, 18K gold, and precious stones.</p>
+      <div class="hero-buttons reveal stagger-3">
         <a href="#consultation" class="btn-primary">Create Your Jewel</a>
         <a href="#heirloom" class="btn-secondary">Revive a Family Heirloom</a>
       </div>
     </div>
-  </section>
-
-  <!-- Gallery Grid -->
-  <section class="gallery">
-    <div class="container">
-      <div class="gallery-header">
-        <p class="section-label">Our Creations</p>
-        <h2 class="section-heading">Handcrafted Masterpieces</h2>
-      </div>
-      <div class="gallery-grid">
-        <div class="gallery-item gallery-item--tall">
-          <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=600&q=80" alt="Custom gold necklace with diamonds" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80" alt="Emerald and gold brooch" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=600&q=80" alt="Diamond engagement ring" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=600&q=80" alt="Gold bracelets collection" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=600&q=80" alt="Diamond pendant necklace" loading="lazy">
-        </div>
-        <div class="gallery-item">
-          <img src="https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=600&q=80" alt="Custom earrings with precious stones" loading="lazy">
-        </div>
-      </div>
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="hero-scroll-line"></div>
     </div>
   </section>
 
@@ -937,22 +1231,22 @@
   <div class="trust-bar">
     <div class="container">
       <div class="trust-items">
-        <div class="trust-item">
+        <div class="trust-item reveal stagger-1">
           <div class="trust-icon">&#9830;</div>
           <h4>GIA Certified</h4>
           <p>Certified diamonds</p>
         </div>
-        <div class="trust-item">
+        <div class="trust-item reveal stagger-2">
           <div class="trust-icon">&#9733;</div>
           <h4>Since 1999</h4>
           <p>25+ years of craftsmanship</p>
         </div>
-        <div class="trust-item">
+        <div class="trust-item reveal stagger-3">
           <div class="trust-icon">&#10003;</div>
           <h4>Lifetime Warranty</h4>
           <p>On every piece</p>
         </div>
-        <div class="trust-item">
+        <div class="trust-item reveal stagger-4">
           <div class="trust-icon">&#9825;</div>
           <h4>100% Custom</h4>
           <p>Tailored to you</p>
@@ -961,14 +1255,57 @@
     </div>
   </div>
 
+  <!-- Image Slider / Carousel -->
+  <section class="slider-section">
+    <div class="container">
+      <div class="slider-header">
+        <p class="section-label reveal">Our Creations</p>
+        <h2 class="section-heading reveal stagger-1">Handcrafted Masterpieces</h2>
+      </div>
+    </div>
+    <div class="slider-wrapper" id="gallerySlider">
+      <div class="slider-track" id="sliderTrack">
+        <div class="slider-slide">
+          <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=600&q=80" alt="Custom gold necklace with diamonds" loading="lazy">
+          <div class="slider-slide-overlay"><span>Gold Necklace</span></div>
+        </div>
+        <div class="slider-slide">
+          <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80" alt="Emerald and gold brooch" loading="lazy">
+          <div class="slider-slide-overlay"><span>Emerald Brooch</span></div>
+        </div>
+        <div class="slider-slide">
+          <img src="https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=600&q=80" alt="Diamond engagement ring" loading="lazy">
+          <div class="slider-slide-overlay"><span>Engagement Ring</span></div>
+        </div>
+        <div class="slider-slide">
+          <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=600&q=80" alt="Gold bracelets collection" loading="lazy">
+          <div class="slider-slide-overlay"><span>Gold Bracelets</span></div>
+        </div>
+        <div class="slider-slide">
+          <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=600&q=80" alt="Diamond pendant necklace" loading="lazy">
+          <div class="slider-slide-overlay"><span>Diamond Pendant</span></div>
+        </div>
+        <div class="slider-slide">
+          <img src="https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=600&q=80" alt="Custom earrings with precious stones" loading="lazy">
+          <div class="slider-slide-overlay"><span>Custom Earrings</span></div>
+        </div>
+      </div>
+      <div class="slider-controls">
+        <button class="slider-btn" id="sliderPrev" aria-label="Previous slide">&#8592;</button>
+        <div class="slider-dots" id="sliderDots"></div>
+        <button class="slider-btn" id="sliderNext" aria-label="Next slide">&#8594;</button>
+      </div>
+    </div>
+  </section>
+
   <!-- About / Our Story -->
   <section class="section about">
     <div class="container">
       <div class="about-grid">
-        <div class="about-image">
+        <div class="about-image reveal-left">
           <span class="about-image-text">IJ</span>
         </div>
-        <div class="about-content">
+        <div class="about-content reveal-right">
           <p class="section-label">Our Story</p>
           <h2 class="section-heading">Crafting Dreams in Gold &amp; Diamonds</h2>
           <p class="section-text">Founded in Dubai in 1999 by Fadi Marhaba, Isadora Jewellery was born from a passion for transforming precious materials into wearable art. After six years mastering the craft across Asia Pacific &mdash; specialising in diamonds, coloured stones, and fine craftsmanship &mdash; Fadi brought his vision to the Gulf region.</p>
@@ -986,14 +1323,24 @@
     </div>
   </section>
 
+  <!-- Parallax Divider 1 -->
+  <div class="parallax-divider">
+    <div class="parallax-divider-bg">
+      <img src="https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&w=1920&q=80" alt="Jewellery craftsmanship" id="parallax1" loading="lazy">
+    </div>
+    <div class="parallax-divider-content">
+      <h2 class="reveal"><em>Every masterpiece</em> begins with a single conversation</h2>
+    </div>
+  </div>
+
   <!-- Bespoke Creation -->
   <section class="section bespoke">
     <div class="container">
       <div class="bespoke-grid">
-        <div class="bespoke-image">
+        <div class="bespoke-image reveal-left">
           <img src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=800&q=80" alt="Jeweller crafting a bespoke ring in the atelier" loading="lazy">
         </div>
-        <div class="bespoke-content">
+        <div class="bespoke-content reveal-right">
           <p class="section-label">Bespoke Creation</p>
           <h2 class="section-heading">A Jewel Designed Entirely for You</h2>
           <p class="section-text">From the very first sketch to the final polish, our master artisans work hand-in-hand with you to bring your vision to life. Every stone is selected, every curve considered, and every detail refined to perfection.</p>
@@ -1012,7 +1359,7 @@
   <section class="section heirloom" id="heirloom">
     <div class="container">
       <div class="heirloom-grid">
-        <div class="heirloom-content">
+        <div class="heirloom-content reveal-left">
           <p class="section-label">Heirloom Reimagined</p>
           <h2 class="section-heading">Breathe New Life into Your Family Jewels</h2>
           <p class="section-text">Inherited pieces carry irreplaceable sentimental value. We specialise in transforming vintage and family jewellery into stunning modern designs &mdash; preserving every memory while giving it a new story.</p>
@@ -1023,38 +1370,48 @@
           </ul>
           <a href="#consultation" class="btn-primary">Revive Your Heirloom</a>
         </div>
-        <div class="heirloom-image">
+        <div class="heirloom-image reveal-right">
           <img src="https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&w=800&q=80" alt="Vintage jewellery being restored and redesigned" loading="lazy">
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Parallax Divider 2 -->
+  <div class="parallax-divider">
+    <div class="parallax-divider-bg">
+      <img src="https://images.unsplash.com/photo-1574634534894-89d7576c8259?auto=format&fit=crop&w=1920&q=80" alt="Diamond close-up" id="parallax2" loading="lazy">
+    </div>
+    <div class="parallax-divider-content">
+      <h2 class="reveal">Precision, passion, and <em>timeless beauty</em></h2>
+    </div>
+  </div>
+
   <!-- How It Works -->
   <section class="section process" id="process">
     <div class="container">
       <div class="process-header">
-        <p class="section-label">How It Works</p>
-        <h2 class="section-heading">Your Vision, Our Craft</h2>
-        <p class="section-text">From your first spark of inspiration to the final masterpiece, we guide you through every step of the bespoke creation process.</p>
+        <p class="section-label reveal">How It Works</p>
+        <h2 class="section-heading reveal stagger-1">Your Vision, Our Craft</h2>
+        <p class="section-text reveal stagger-2">From your first spark of inspiration to the final masterpiece, we guide you through every step of the bespoke creation process.</p>
       </div>
       <div class="process-steps">
-        <div class="step">
+        <div class="step reveal stagger-1">
           <div class="step-number">01</div>
           <h3>Consultation</h3>
           <p>Share your vision with us. We discuss your style, preferences, budget, and the occasion to understand exactly what you are looking for.</p>
         </div>
-        <div class="step">
+        <div class="step reveal stagger-2">
           <div class="step-number">02</div>
           <h3>Design</h3>
           <p>Our designers create detailed CAD renderings of your piece. You review, refine, and approve every detail before production begins.</p>
         </div>
-        <div class="step">
+        <div class="step reveal stagger-3">
           <div class="step-number">03</div>
           <h3>Crafting</h3>
           <p>Master jewellers bring your design to life using 18K gold and hand-selected stones. We share video and photo updates throughout.</p>
         </div>
-        <div class="step">
+        <div class="step reveal stagger-4">
           <div class="step-number">04</div>
           <h3>Delivery</h3>
           <p>Your finished piece is quality-checked, certified, and delivered to you &mdash; complete with a lifetime warranty and 30-day guarantee.</p>
@@ -1067,22 +1424,22 @@
   <section class="section services">
     <div class="container">
       <div class="services-header">
-        <p class="section-label">What We Offer</p>
-        <h2 class="section-heading">Bespoke Jewellery Services</h2>
-        <p class="section-text">Whether you are creating something entirely new or breathing new life into a cherished heirloom, we are here to help.</p>
+        <p class="section-label reveal">What We Offer</p>
+        <h2 class="section-heading reveal stagger-1">Bespoke Jewellery Services</h2>
+        <p class="section-text reveal stagger-2">Whether you are creating something entirely new or breathing new life into a cherished heirloom, we are here to help.</p>
       </div>
       <div class="services-grid">
-        <div class="service-card">
+        <div class="service-card reveal-scale stagger-1">
           <div class="service-icon">&#128141;</div>
           <h3>Custom Design</h3>
           <p>Rings, necklaces, earrings, bracelets, and more &mdash; designed from scratch to match your vision and personality.</p>
         </div>
-        <div class="service-card">
+        <div class="service-card reveal-scale stagger-2">
           <div class="service-icon">&#128142;</div>
           <h3>Bridal Collection</h3>
           <p>Engagement rings and wedding bands crafted to symbolise your love story with GIA certified diamonds.</p>
         </div>
-        <div class="service-card">
+        <div class="service-card reveal-scale stagger-3">
           <div class="service-icon">&#10024;</div>
           <h3>Repair &amp; Repurpose</h3>
           <p>Transform inherited or old jewellery into stunning modern designs while preserving the sentimental value.</p>
@@ -1091,29 +1448,36 @@
     </div>
   </section>
 
-  <!-- Testimonials -->
+  <!-- Testimonials Slider -->
   <section class="section testimonials">
     <div class="container">
       <div class="testimonials-header">
-        <p class="section-label">Client Stories</p>
-        <h2 class="section-heading">Trusted by Hundreds Every Year</h2>
+        <p class="section-label reveal">Client Stories</p>
+        <h2 class="section-heading reveal stagger-1">Trusted by Hundreds Every Year</h2>
       </div>
-      <div class="testimonials-grid">
-        <div class="testimonial-card">
-          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p>&ldquo;Isadora turned my grandmother's vintage brooch into the most beautiful engagement ring. The attention to detail was extraordinary.&rdquo;</p>
-          <span class="testimonial-author">Sarah M. &mdash; Dubai</span>
+      <div class="testimonials-track-wrapper reveal stagger-2">
+        <div class="testimonials-track" id="testimonialsTrack">
+          <div class="testimonial-card">
+            <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <blockquote>&ldquo;Isadora turned my grandmother's vintage brooch into the most beautiful engagement ring. The attention to detail was extraordinary.&rdquo;</blockquote>
+            <span class="testimonial-author">Sarah M. &mdash; Dubai</span>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <blockquote>&ldquo;The entire process was transparent and personal. I received video updates from the workshop and the final piece exceeded all expectations.&rdquo;</blockquote>
+            <span class="testimonial-author">Ahmed K. &mdash; Abu Dhabi</span>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <blockquote>&ldquo;Exceptional quality at a price that surprised me. Fadi and his team truly care about creating something meaningful for each client.&rdquo;</blockquote>
+            <span class="testimonial-author">Priya L. &mdash; Dubai</span>
+          </div>
         </div>
-        <div class="testimonial-card">
-          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p>&ldquo;The entire process was transparent and personal. I received video updates from the workshop and the final piece exceeded all expectations.&rdquo;</p>
-          <span class="testimonial-author">Ahmed K. &mdash; Abu Dhabi</span>
-        </div>
-        <div class="testimonial-card">
-          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p>&ldquo;Exceptional quality at a price that surprised me. Fadi and his team truly care about creating something meaningful for each client.&rdquo;</p>
-          <span class="testimonial-author">Priya L. &mdash; Dubai</span>
-        </div>
+      </div>
+      <div class="testimonials-controls reveal stagger-3">
+        <button class="testimonials-btn" id="testPrev" aria-label="Previous testimonial">&#8592;</button>
+        <div class="testimonials-dots" id="testDots"></div>
+        <button class="testimonials-btn" id="testNext" aria-label="Next testimonial">&#8594;</button>
       </div>
     </div>
   </section>
@@ -1122,7 +1486,7 @@
   <section class="lead-section" id="consultation">
     <div class="container">
       <div class="lead-grid">
-        <div class="lead-content">
+        <div class="lead-content reveal-left">
           <p class="section-label">Get Started</p>
           <h2 class="section-heading">Book Your Free Consultation</h2>
           <p class="section-text">Take the first step toward your dream piece. Share your ideas with us and our design team will reach out within 24 hours to discuss your vision.</p>
@@ -1134,7 +1498,7 @@
             <li>Lifetime warranty on every creation</li>
           </ul>
         </div>
-        <form class="lead-form" id="leadForm" onsubmit="handleSubmit(event)">
+        <form class="lead-form reveal-right" id="leadForm" onsubmit="handleSubmit(event)">
           <h3>Request a Consultation</h3>
           <p>Fill in your details and we will get back to you shortly.</p>
           <div class="form-row">
@@ -1222,12 +1586,210 @@
   </a>
 
   <script>
-    // Header scroll effect
-    window.addEventListener('scroll', function() {
-      document.getElementById('header').classList.toggle('scrolled', window.scrollY > 50);
-    });
+    // ── Header scroll effect (transparent on hero, solid after) ──
+    var header = document.getElementById('header');
+    var hero = document.getElementById('hero');
 
-    // Form submission handler
+    function updateHeader() {
+      var heroBottom = hero.offsetTop + hero.offsetHeight;
+      header.classList.toggle('scrolled', window.scrollY > heroBottom - 80);
+    }
+    window.addEventListener('scroll', updateHeader);
+    updateHeader();
+
+    // ── Parallax effect ──
+    var heroBg = document.getElementById('heroBg');
+    var parallax1 = document.getElementById('parallax1');
+    var parallax2 = document.getElementById('parallax2');
+
+    function updateParallax() {
+      var scrollY = window.scrollY;
+      var winH = window.innerHeight;
+
+      // Hero parallax
+      if (scrollY < winH * 1.5) {
+        heroBg.style.transform = 'translateY(' + (scrollY * 0.35) + 'px)';
+      }
+
+      // Divider parallax
+      var dividers = document.querySelectorAll('.parallax-divider-bg img');
+      dividers.forEach(function(img) {
+        var parent = img.closest('.parallax-divider');
+        var rect = parent.getBoundingClientRect();
+        if (rect.bottom > 0 && rect.top < winH) {
+          var progress = (winH - rect.top) / (winH + rect.height);
+          var offset = (progress - 0.5) * 80;
+          img.style.transform = 'translateY(' + offset + 'px)';
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateParallax);
+    updateParallax();
+
+    // ── Scroll Reveal (IntersectionObserver) ──
+    var revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+
+    var revealObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(function(el) { revealObserver.observe(el); });
+
+    // ── Gallery Slider ──
+    (function() {
+      var track = document.getElementById('sliderTrack');
+      var slides = track.querySelectorAll('.slider-slide');
+      var prevBtn = document.getElementById('sliderPrev');
+      var nextBtn = document.getElementById('sliderNext');
+      var dotsContainer = document.getElementById('sliderDots');
+      var currentIndex = 0;
+      var slidesPerView = 3;
+      var gap = 16;
+      var autoInterval;
+      var isDragging = false;
+      var startX = 0;
+      var currentTranslate = 0;
+      var prevTranslate = 0;
+
+      function getSlidesPerView() {
+        if (window.innerWidth <= 768) return 1;
+        if (window.innerWidth <= 1024) return 2;
+        return 3;
+      }
+
+      function getMaxIndex() {
+        return Math.max(0, slides.length - slidesPerView);
+      }
+
+      function buildDots() {
+        dotsContainer.innerHTML = '';
+        var count = getMaxIndex() + 1;
+        for (var i = 0; i < count; i++) {
+          var dot = document.createElement('button');
+          dot.className = 'slider-dot' + (i === currentIndex ? ' active' : '');
+          dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+          dot.addEventListener('click', (function(idx) {
+            return function() { goTo(idx); };
+          })(i));
+          dotsContainer.appendChild(dot);
+        }
+      }
+
+      function updateDots() {
+        var dots = dotsContainer.querySelectorAll('.slider-dot');
+        dots.forEach(function(d, i) {
+          d.classList.toggle('active', i === currentIndex);
+        });
+      }
+
+      function goTo(idx) {
+        currentIndex = Math.max(0, Math.min(idx, getMaxIndex()));
+        var slideWidth = track.parentElement.offsetWidth / slidesPerView;
+        currentTranslate = -currentIndex * (slideWidth + gap);
+        track.style.transform = 'translateX(' + currentTranslate + 'px)';
+        prevTranslate = currentTranslate;
+        updateDots();
+      }
+
+      function next() { goTo(currentIndex >= getMaxIndex() ? 0 : currentIndex + 1); }
+      function prev() { goTo(currentIndex <= 0 ? getMaxIndex() : currentIndex - 1); }
+
+      prevBtn.addEventListener('click', function() { prev(); resetAuto(); });
+      nextBtn.addEventListener('click', function() { next(); resetAuto(); });
+
+      // Drag support
+      track.addEventListener('mousedown', dragStart);
+      track.addEventListener('touchstart', dragStart, { passive: true });
+      window.addEventListener('mousemove', dragMove);
+      window.addEventListener('touchmove', dragMove, { passive: true });
+      window.addEventListener('mouseup', dragEnd);
+      window.addEventListener('touchend', dragEnd);
+
+      function dragStart(e) {
+        isDragging = true;
+        startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+        track.classList.add('dragging');
+      }
+
+      function dragMove(e) {
+        if (!isDragging) return;
+        var x = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+        var diff = x - startX;
+        track.style.transform = 'translateX(' + (prevTranslate + diff) + 'px)';
+      }
+
+      function dragEnd(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        track.classList.remove('dragging');
+        var x = e.type === 'touchend' ? e.changedTouches[0].clientX : e.pageX;
+        var diff = x - startX;
+        if (diff < -60) next();
+        else if (diff > 60) prev();
+        else goTo(currentIndex);
+        resetAuto();
+      }
+
+      function startAuto() { autoInterval = setInterval(next, 4000); }
+      function resetAuto() { clearInterval(autoInterval); startAuto(); }
+
+      function init() {
+        slidesPerView = getSlidesPerView();
+        if (currentIndex > getMaxIndex()) currentIndex = getMaxIndex();
+        buildDots();
+        goTo(currentIndex);
+      }
+
+      window.addEventListener('resize', init);
+      init();
+      startAuto();
+    })();
+
+    // ── Testimonials Slider ──
+    (function() {
+      var track = document.getElementById('testimonialsTrack');
+      var cards = track.querySelectorAll('.testimonial-card');
+      var prevBtn = document.getElementById('testPrev');
+      var nextBtn = document.getElementById('testNext');
+      var dotsContainer = document.getElementById('testDots');
+      var current = 0;
+      var autoInterval;
+
+      // Build dots
+      cards.forEach(function(_, i) {
+        var dot = document.createElement('button');
+        dot.className = 'testimonials-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'Go to testimonial ' + (i + 1));
+        dot.addEventListener('click', function() { goTo(i); resetAuto(); });
+        dotsContainer.appendChild(dot);
+      });
+
+      function goTo(idx) {
+        current = idx;
+        track.style.transform = 'translateX(-' + (current * 100) + '%)';
+        dotsContainer.querySelectorAll('.testimonials-dot').forEach(function(d, i) {
+          d.classList.toggle('active', i === current);
+        });
+      }
+
+      function next() { goTo(current >= cards.length - 1 ? 0 : current + 1); }
+      function prev() { goTo(current <= 0 ? cards.length - 1 : current - 1); }
+
+      prevBtn.addEventListener('click', function() { prev(); resetAuto(); });
+      nextBtn.addEventListener('click', function() { next(); resetAuto(); });
+
+      function startAuto() { autoInterval = setInterval(next, 5000); }
+      function resetAuto() { clearInterval(autoInterval); startAuto(); }
+      startAuto();
+    })();
+
+    // ── Form submission handler ──
     function handleSubmit(e) {
       e.preventDefault();
       var form = e.target;
@@ -1240,20 +1802,17 @@
         message: form.message.value
       };
 
-      // Store lead in localStorage as a simple demo
       var leads = JSON.parse(localStorage.getItem('isadora_leads') || '[]');
       data.submittedAt = new Date().toISOString();
       leads.push(data);
       localStorage.setItem('isadora_leads', JSON.stringify(leads));
 
-      // Show success message
       form.innerHTML = '<div style="text-align:center;padding:60px 20px;">' +
         '<div style="font-size:48px;margin-bottom:16px;">&#9830;</div>' +
         '<h3 style="font-family:var(--font-heading);font-size:28px;margin-bottom:12px;">Thank You!</h3>' +
         '<p style="font-family:var(--font-body);font-size:15px;color:var(--text-body);line-height:1.7;">Your consultation request has been received.<br>Our design team will reach out within 24 hours.</p>' +
         '</div>';
 
-      // Scroll to form
       form.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   </script>
